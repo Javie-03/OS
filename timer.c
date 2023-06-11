@@ -31,8 +31,12 @@ void timer_init()
 void timer_handler() 
 {
 	_tick++;
-	printf("tick: %d\n", _tick);
-
+    if(_tick < 10) {
+        printf("\r\033[K00:00:0%d", _tick % 60);
+    }
+    else {
+        printf("\r\033[K00:00:%d", _tick % 60);
+    }
 	timer_load(TIMER_INTERVAL);
 
 	schedule();

@@ -42,28 +42,59 @@ static int _vsnprintf(char * out, size_t n, const char* s, va_list vl)
 				break;
 			}
 			case 'd': {
-				long num = longarg ? va_arg(vl, long) : va_arg(vl, int);
-				if (num < 0) {
-					num = -num;
-					if (out && pos < n) {
-						out[pos] = '-';
-					}
-					pos++;
-				}
-				long digits = 1;
-				for (long nn = num; nn /= 10; digits++);
-				for (int i = digits-1; i >= 0; i--) {
-					if (out && pos + i < n) {
-						out[pos + i] = '0' + (num % 10);
-					}
-					num /= 10;
-				}
-				pos += digits;
-				longarg = 0;
-				format = 0;
-				break;
-			}
-			case 's': {
+                long num = longarg ? va_arg(vl, long) : va_arg(vl, int);
+                int width = 0;  // This should be parsed from the format string
+                char padding_char = ' ';  // This should also be parsed from the format string
+
+                // Parse width and padding character from format string
+                const char* format_start = s;
+                while (format_start != s) {
+                    format_start--;
+                    if (*format_start == '0') {
+                        padding_char = '0';
+                    } else if (*format_start >= '1' && *format_start <= '9') {
+                        width = width * 10 + (*format_start - '0');
+                    } else {
+                        // Stop when we hit a non-digit character
+                        break;
+                    }
+                }
+
+                if (num < 0) {
+                    num = -num;
+                    if (out && pos < n) {
+                        out[pos] = '-';
+                    }
+                    pos++;
+                }
+
+                long digits = 1;
+                for (long nn = num; nn /= 10; digits++);
+                // Calculate how many padding characters we need
+                int padding = (digits < width) ? (width - digits) : 0;
+
+                // Print the padding characters
+                for (int i = 0; i < padding; i++) {
+                    if (out && pos < n) {
+                        out[pos] = padding_char;
+                    }
+                    pos++;
+                }
+
+                // Print the number as before
+                for (int i = digits-1; i >= 0; i--) {
+                    if (out && pos + i < n) {
+                        out[pos + i] = '0' + (num % 10);
+                    }
+                    num /= 10;
+                }
+                pos += digits;
+                longarg = 0;
+                format = 0;
+                break;
+            }
+
+                case 's': {
 				const char* s2 = va_arg(vl, const char*);
 				while (*s2) {
 					if (out && pos < n) {
