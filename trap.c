@@ -53,6 +53,7 @@ reg_t trap_handler(reg_t epc, reg_t cause)
 			timer_handler();
 			break;
 		case 11:
+            printf("\n");
 			uart_puts("external interruption!\n");
 			external_interrupt_handler();
 			break;
