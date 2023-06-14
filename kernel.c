@@ -22,7 +22,7 @@ void start_kernel(void)
 
     trap_init();
 
-    //plic_init();
+    plic_init();
 
     timer_init();
 
