@@ -20,9 +20,19 @@ void start_kernel(void)
 
 	page_init();
 
-    page_test();
-    while(1);
-	//uart_puts("Would not go here!\n");
-	//while (1) {}; // stop here!
+    trap_init();
+
+    //plic_init();
+
+    timer_init();
+
+    sched_init();
+
+    os_main();
+
+    schedule();
+
+	uart_puts("Would not go here!\n");
+	while (1) {}; // stop here!
 }
 
