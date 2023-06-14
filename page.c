@@ -173,17 +173,39 @@ void page_free(void *p)
 	}
 }
 
-void page_test()
-{
-	void *p = page_alloc(2);
-	printf("p = 0x%x\n", p);
-	//page_free(p);
 
-	void *p2 = page_alloc(7);
-	printf("p2 = 0x%x\n", p2);
-	page_free(p2);
+void page_test() {
+    int iterations = 10;
+    int max_pages = 10;
+    void* ptrs[max_pages];
 
-	void *p3 = page_alloc(4);
-	printf("p3 = 0x%x\n", p3);
+    printf("Start testing page_alloc and page_free...\n");
+
+    for (int j = 0; j < iterations; j++) {
+        printf("Iteration %d\n", j+1);
+
+        // Memory allocation test
+        for (int i = 1; i <= max_pages; i++) {
+            printf("Testcase %d: Allocating %d pages...\n", (j*2*max_pages)+i, i);
+            ptrs[i-1] = page_alloc(i);
+            if (ptrs[i-1] == NULL) {
+                printf("Failed to allocate %d pages.\n", i);
+                return;
+            } else {
+                printf("Allocation successful. Address: 0x%x\n", ptrs[i-1]);
+                printf("Testcase %d passed!\n", (j*2*max_pages)+i);
+            }
+        }
+
+        // Memory deallocation test
+        for (int i = max_pages; i > 0; i--) {
+            printf("Testcase %d: Freeing %d pages...\n", (j*2*max_pages)+max_pages+i, i);
+            page_free(ptrs[i-1]);
+            ptrs[i-1] = NULL;
+            printf("Testcase %d passed!\n", (j*2*max_pages)+max_pages+i);
+        }
+    }
+
+    printf("All testcases passed!\n");
 }
 
