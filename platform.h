@@ -10,7 +10,7 @@
  * see https://github.com/qemu/qemu/blob/master/include/hw/riscv/virt.h
  * #define VIRT_CPUS_MAX 8
  */
-#define MAXNUM_CPU 8
+#define MAXNUM_CPU 2
 
 /*
  * MemoryMap

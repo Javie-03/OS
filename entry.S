@@ -33,9 +33,7 @@
 	sw t3, 108(\base)
 	sw t4, 112(\base)
 	sw t5, 116(\base)
-	# we don't save t6 here, due to we have used
-	# it as base, we have to save t6 in an extra step
-	# outside of reg_save
+
 .endm
 
 # restore all General-Purpose(GP) registers from the context
@@ -76,12 +74,6 @@
 	lw t6, 120(\base)
 .endm
 
-# Something to note about save/restore:
-# - We use mscratch to hold a pointer to context of current task
-# - We use t6 as the 'base' for reg_save/reg_restore, because it is the
-#   very bottom register (x31) and would not be overwritten during loading.
-#   Note: CSRs(mscratch) can not be used as 'base' due to load/restore
-#   instruction only accept general purpose registers.
 
 .text
 
